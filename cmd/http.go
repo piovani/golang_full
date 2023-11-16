@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/piovani/go_full/http/rest"
+	"github.com/piovani/go_full/infra/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,10 @@ var (
 		Short:   "Start listen http type rest",
 		Version: "1.0.0",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("AUQI")
+			logger := logger.NewLogger("")
+			api := rest.NewRest()
+
+			logger.Error(api.Execute())
 		},
 	}
 )

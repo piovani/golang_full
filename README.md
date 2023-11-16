@@ -21,3 +21,4 @@ Demonstrate knowledge with Go
     [ ] - Read
     [ ] - Update
     [ ] - Delete
+[ ] - Sonar Cloud

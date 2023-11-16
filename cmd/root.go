@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/piovani/go_full/infra/config"
+	"github.com/piovani/go_full/infra/logger"
 )
 
 func (c *Cmd) Execute() {
@@ -24,6 +23,6 @@ func (c *Cmd) addCommands() {
 
 func (c *Cmd) errCheck(err error) {
 	if err != nil {
-		log.Fatalln("DEU RUIM: ", err)
+		logger.NewLogger("structure").Error(err)
 	}
 }
