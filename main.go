@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/piovani/go_full/cmd"
+)
 
 func main() {
-	fmt.Println("Ola Mundo")
+	cmd.NewCmd().Execute()
 }
