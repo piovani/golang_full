@@ -8,3 +8,7 @@ import (
 type CreateStudentContract interface {
 	Execute(dto dto.StudentInput) (*entity.Student, error)
 }
+
+type GetStudentContract interface {
+	Execute() ([]*entity.Student, error)
+}

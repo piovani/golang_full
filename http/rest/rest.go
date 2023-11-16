@@ -29,7 +29,10 @@ func (r *Rest) Execute() error {
 func (r *Rest) getRoutes() {
 	// CONTROLLERS
 	healthController := controller.NewHealthController()
-	studentController := controller.NewStudentController(usecase.NewCreateStudent())
+	studentController := controller.NewStudentController(
+		usecase.NewCreateStudent(),
+		usecase.NewGetStudents(),
+	)
 
 	r.echo.Use(middleware.Recover())
 	r.echo.Use(middleware.Logger())
@@ -37,6 +40,7 @@ func (r *Rest) getRoutes() {
 	r.echo.GET("/health", healthController.Health)
 
 	r.echo.POST("/student", studentController.Create)
+	r.echo.GET("/student", studentController.GetStudents)
 }
 
 func (r *Rest) start() error {
