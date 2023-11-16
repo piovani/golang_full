@@ -10,10 +10,14 @@ Demonstrate knowledge with Go
 1. 
 
 ## Checklist
-[ ] - Structure Basic
+[X] - Structure Basic
 [ ] - API Rest
+    [ ] - Authentication
+    [ ] - Validation Request
 [ ] - API gRPC
 [ ] - DB PostgreSQL
+    [ ] - UUID with binary
+    [ ] - Foreign key
 [ ] - Kafka
 [ ] - S3
 [ ] - CRUD
