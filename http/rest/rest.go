@@ -8,6 +8,7 @@ import (
 	usecase "github.com/piovani/go_full/domain/use_case"
 	"github.com/piovani/go_full/http/rest/controller"
 	"github.com/piovani/go_full/infra/config"
+	"github.com/piovani/go_full/infra/database/repository"
 )
 
 type Rest struct {
@@ -27,10 +28,13 @@ func (r *Rest) Execute() error {
 }
 
 func (r *Rest) getRoutes() {
+	// REPOSITORIES
+	studentRepository := repository.NewStudentRepository()
+
 	// CONTROLLERS
 	healthController := controller.NewHealthController()
 	studentController := controller.NewStudentController(
-		usecase.NewCreateStudent(),
+		usecase.NewCreateStudent(studentRepository),
 		usecase.NewGetStudents(),
 	)
 

@@ -1,0 +1,16 @@
+version: '3.9'
+
+volumes:
+  go_full_database-data:
+    external: false
+
+services:
+  go_full_database:
+    container_name: go_full_database
+    image: postgres:16.1
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - go_full_database-data:/data

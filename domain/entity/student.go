@@ -19,3 +19,7 @@ func NewStudent(name string, age int) *Student {
 		Age:  age,
 	}
 }
+
+type StudentRepository interface {
+	Save(student *Student) error
+}
