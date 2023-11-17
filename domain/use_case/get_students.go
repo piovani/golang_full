@@ -1,13 +1,24 @@
 package usecase
 
-import "github.com/piovani/go_full/domain/entity"
+import (
+	"github.com/piovani/go_full/domain/entity"
+)
 
-type GetStudents struct{}
+type GetStudents struct {
+	studentRepository entity.StudentRepository
+}
 
-func NewGetStudents() *GetStudents {
-	return &GetStudents{}
+func NewGetStudents(sr entity.StudentRepository) *GetStudents {
+	return &GetStudents{
+		studentRepository: sr,
+	}
 }
 
 func (s *GetStudents) Execute() ([]*entity.Student, error) {
-	return entity.Students, nil
+	var students []*entity.Student
+	if err := s.studentRepository.All(students); err != nil {
+		return students, err
+	}
+
+	return students, nil
 }

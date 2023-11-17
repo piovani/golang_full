@@ -35,7 +35,7 @@ func (r *Rest) getRoutes() {
 	healthController := controller.NewHealthController()
 	studentController := controller.NewStudentController(
 		usecase.NewCreateStudent(studentRepository),
-		usecase.NewGetStudents(),
+		usecase.NewGetStudents(studentRepository),
 	)
 
 	r.echo.Use(middleware.Recover())

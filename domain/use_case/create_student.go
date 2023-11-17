@@ -21,8 +21,12 @@ func (c *CreateStudent) Execute(dto dto.StudentInput) (student *entity.Student, 
 	}
 
 	student = entity.NewStudent(dto.Name, dto.Age)
+	err = c.studentRepository.Save(student)
+	if err != nil {
+		return student, err
+	}
+	
 	entity.Students = append(entity.Students, student)
-	c.studentRepository.Save(student)
 
 	return student, nil
 }

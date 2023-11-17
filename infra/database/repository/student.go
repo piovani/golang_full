@@ -3,15 +3,9 @@ package repository
 import (
 	"fmt"
 
-	"github.com/piovani/go_full/domain/entity"
+	domain_entity "github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/infra/database"
 )
-
-type Student struct {
-	ID   string `gorm:"primaryKey;column:id"`
-	Name string `gorm:"column:name"`
-	Age  int    `gorm:"column:age"`
-}
 
 type StudentRepository struct {
 	database *database.Database
@@ -23,19 +17,24 @@ func NewStudentRepository() *StudentRepository {
 	}
 }
 
-func (r *StudentRepository) Save(s *entity.Student) error {
-	db, _ := r.database.Open()
+func (r *StudentRepository) Save(s *domain_entity.Student) error {
+	db, err := r.database.Open()
+	if err != nil {
+		return err
+	}
 
-	result := db.Create(r.getStudentDB(s))
-	fmt.Println(result)
-
-	return nil
+	return db.Create(s).Error
 }
 
-func (r *StudentRepository) getStudentDB(s *entity.Student) Student {
-	return Student{
-		ID:   s.ID,
-		Name: s.Name,
-		Age:  s.Age,
+func (r *StudentRepository) All(s []*domain_entity.Student) error {
+	db, err := r.database.Open()
+	if err != nil {
+		return err
 	}
+
+	result := db.Find(s)
+
+	fmt.Println(result.RowsAffected)
+
+	return result.Error
 }

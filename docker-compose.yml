@@ -7,10 +7,13 @@ volumes:
 services:
   go_full_database:
     container_name: go_full_database
-    image: postgres:16.1
-    ports:
-      - ${DB_PORT}:5432
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    image: postgres:16.1-alpine
+    restart: always
     volumes:
       - go_full_database-data:/data
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:5432

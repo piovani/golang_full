@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/infra/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -14,14 +15,26 @@ func NewDatabase() *Database {
 	return &Database{}
 }
 
-func (d *Database) Open() (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=America/Sao_Paulo",
+func (d *Database) Open() (db *gorm.DB, err error) {
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Env.HostDB,
+		config.Env.PortDB,
 		config.Env.UserDB,
 		config.Env.PasswordDB,
 		config.Env.DatabaseDB,
-		config.Env.PortDB,
 	)
 
-	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	return gorm.Open(postgres.New(postgres.Config{
+		DriverName: "postgres",
+		DSN:        dsn,
+	}), &gorm.Config{})
+}
+
+func (d *Database) Migrate() error {
+	db, err := d.Open()
+	if err != nil {
+		return err
+	}
+
+	return db.AutoMigrate(entity.Student{})
 }

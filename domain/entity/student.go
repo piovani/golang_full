@@ -7,9 +7,9 @@ var (
 )
 
 type Student struct {
-	ID   string
-	Name string
-	Age  int
+	ID   string `gorm:"column:id;primaryKey"`
+	Name string `gorm:"column:name"`
+	Age  int    `gorm:"column:age"`
 }
 
 func NewStudent(name string, age int) *Student {
@@ -22,4 +22,5 @@ func NewStudent(name string, age int) *Student {
 
 type StudentRepository interface {
 	Save(student *Student) error
+	All(students []*Student) error
 }

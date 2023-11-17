@@ -11,7 +11,7 @@ type Config struct {
 
 	// DB
 	HostDB     string `envconfig:"DB_HOST"`
-	PortDB     int    `envconfig:"DB_PORT"`
+	PortDB     string `envconfig:"DB_PORT"`
 	UserDB     string `envconfig:"DB_USER"`
 	PasswordDB string `envconfig:"DB_PASSWORD"`
 	DatabaseDB string `envconfig:"DB_DATABASE"`

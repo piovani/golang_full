@@ -4,12 +4,14 @@
 Demonstrate knowledge with Go
 
 ## Requirements
-- 
+- Docker version 24.0.6 or a compatible
+- Docker Compose 2.23.0 or a compatible
 
 ## How to Start
 1. 
 
 ## Checklist
+[ ] - Makefile
 [X] - Structure Basic
 [ ] - API Rest
     [ ] - Authentication
@@ -19,10 +21,25 @@ Demonstrate knowledge with Go
     [ ] - UUID with binary
     [ ] - Foreign key
 [ ] - Kafka
+    [ ] - Publish
+    [ ] - Consumer
 [ ] - S3
 [ ] - CRUD
     [ ] - Create
     [ ] - Read
     [ ] - Update
     [ ] - Delete
+[ ] - Document
+    [ ] - Swagger
+    [ ] - Collection Postman
+    [ ] - Instruction README
+[ ] - Tests
+    [ ] - Unit Tests
+    [ ] - Integration Tests
 [ ] - Sonar Cloud
+[ ] - Docker
+    [X] - Database
+    [ ] - S3
+    [ ] - API Rest
+    [ ] - API gRPC
+    [ ] - Worker Consumer

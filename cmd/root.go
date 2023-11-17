@@ -17,6 +17,7 @@ func (c *Cmd) initConfig() error {
 
 func (c *Cmd) addCommands() {
 	c.cobra.AddCommand(
+		Migrate,
 		APIRest,
 	)
 }

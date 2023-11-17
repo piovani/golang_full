@@ -41,7 +41,7 @@ func (s *StudentController) GetStudents(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "bad request")
 	}
 
-	return c.JSON(http.StatusCreated, s.getStudentsOut(students))
+	return c.JSON(http.StatusCreated, students)
 }
 
 func (s *StudentController) getStudentOut(student *entity.Student) dto.StudentOutput {
