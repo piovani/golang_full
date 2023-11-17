@@ -10,5 +10,5 @@ type CreateStudentContract interface {
 }
 
 type GetStudentContract interface {
-	Execute() ([]*entity.Student, error)
+	Execute() (*[]entity.Student, error)
 }

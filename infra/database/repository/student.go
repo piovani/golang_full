@@ -26,7 +26,7 @@ func (r *StudentRepository) Save(s *domain_entity.Student) error {
 	return db.Create(s).Error
 }
 
-func (r *StudentRepository) All(s []*domain_entity.Student) error {
+func (r *StudentRepository) All(s *[]domain_entity.Student) error {
 	db, err := r.database.Open()
 	if err != nil {
 		return err

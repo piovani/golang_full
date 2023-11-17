@@ -41,7 +41,7 @@ func (s *StudentController) GetStudents(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "bad request")
 	}
 
-	return c.JSON(http.StatusCreated, students)
+	return c.JSON(http.StatusCreated, s.getStudentsOut(students))
 }
 
 func (s *StudentController) getStudentOut(student *entity.Student) dto.StudentOutput {
@@ -52,9 +52,10 @@ func (s *StudentController) getStudentOut(student *entity.Student) dto.StudentOu
 	}
 }
 
-func (s *StudentController) getStudentsOut(students []*entity.Student) (out []dto.StudentOutput) {
-	for _, student := range students {
-		out = append(out, s.getStudentOut(student))
+func (s *StudentController) getStudentsOut(students *[]entity.Student) (out []dto.StudentOutput) {
+	newStudents := *students
+	for i := 0; i < len(newStudents); i++ {
+		out = append(out, s.getStudentOut(&newStudents[i]))
 	}
 	return out
 }

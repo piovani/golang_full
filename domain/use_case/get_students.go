@@ -14,11 +14,11 @@ func NewGetStudents(sr entity.StudentRepository) *GetStudents {
 	}
 }
 
-func (s *GetStudents) Execute() ([]*entity.Student, error) {
-	var students []*entity.Student
-	if err := s.studentRepository.All(students); err != nil {
-		return students, err
+func (s *GetStudents) Execute() (*[]entity.Student, error) {
+	var students []entity.Student
+	if err := s.studentRepository.All(&students); err != nil {
+		return &students, err
 	}
 
-	return students, nil
+	return &students, nil
 }

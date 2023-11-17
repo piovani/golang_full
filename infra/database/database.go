@@ -15,7 +15,7 @@ func NewDatabase() *Database {
 	return &Database{}
 }
 
-func (d *Database) Open() (db *gorm.DB, err error) {
+func (d *Database) Open() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Env.HostDB,
 		config.Env.PortDB,
@@ -24,10 +24,15 @@ func (d *Database) Open() (db *gorm.DB, err error) {
 		config.Env.DatabaseDB,
 	)
 
-	return gorm.Open(postgres.New(postgres.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
 		DriverName: "postgres",
 		DSN:        dsn,
 	}), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
 
 func (d *Database) Migrate() error {
@@ -36,5 +41,14 @@ func (d *Database) Migrate() error {
 		return err
 	}
 
-	return db.AutoMigrate(entity.Student{})
+	entities := []any{
+		entity.Student{},
+	}
+
+	err = db.Migrator().DropTable(entities...)
+	if err != nil {
+		return err
+	}
+
+	return db.AutoMigrate(entities...)
 }
