@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/piovani/go_full/infra/uuid"
+	"github.com/google/uuid"
 )
 
 var (
@@ -11,7 +11,7 @@ var (
 )
 
 type Student struct {
-	ID        string    `gorm:"column:id;primaryKey"`
+	ID        uuid.UUID `gorm:"column:id;primaryKey"`
 	Name      string    `gorm:"column:name"`
 	Age       int       `gorm:"column:age"`
 	CreatedAt time.Time `gorm:"column:created_at"`
@@ -33,4 +33,5 @@ func NewStudent(name string, age int) *Student {
 type StudentRepository interface {
 	Save(student *Student) error
 	All(students *[]Student) error
+	Find(student *Student) error
 }

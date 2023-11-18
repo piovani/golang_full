@@ -11,7 +11,7 @@ Demonstrate knowledge with Go
 1. 
 
 ## Checklist
-[ ] - Makefile
+[X] - Makefile
 [X] - Structure Basic
 [ ] - API Rest
     [ ] - Authentication
@@ -25,8 +25,8 @@ Demonstrate knowledge with Go
     [ ] - Consumer
 [ ] - S3
 [ ] - CRUD
-    [ ] - Create
-    [ ] - Read
+    [X] - Create
+    [X] - Read
     [ ] - Update
     [ ] - Delete
 [ ] - Document

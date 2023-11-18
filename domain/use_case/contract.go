@@ -9,6 +9,10 @@ type CreateStudentContract interface {
 	Execute(dto dto.StudentInput) (*entity.Student, error)
 }
 
-type GetStudentContract interface {
+type GetStudentsContract interface {
 	Execute() (*[]entity.Student, error)
+}
+
+type GetStudentContract interface {
+	Execute(id string) (*entity.Student, error)
 }

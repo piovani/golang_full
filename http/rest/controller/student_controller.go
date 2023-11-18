@@ -11,13 +11,19 @@ import (
 
 type StudentController struct {
 	UseCaseCreate      usecase.CreateStudentContract
-	UsecaseGetStudents usecase.GetStudentContract
+	UsecaseGetStudents usecase.GetStudentsContract
+	UsecaseGetStudent  usecase.GetStudentContract
 }
 
-func NewStudentController(ucc usecase.CreateStudentContract, ucgs usecase.GetStudentContract) *StudentController {
+func NewStudentController(
+	ucc usecase.CreateStudentContract,
+	ucgs usecase.GetStudentsContract,
+	ucg usecase.GetStudentContract,
+) *StudentController {
 	return &StudentController{
 		UseCaseCreate:      ucc,
 		UsecaseGetStudents: ucgs,
+		UsecaseGetStudent:  ucg,
 	}
 }
 
@@ -42,6 +48,16 @@ func (s *StudentController) GetStudents(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, s.getStudentsOut(students))
+}
+
+func (s *StudentController) GetStudent(c echo.Context) error {
+	ID := c.Param("id")
+	student, err := s.UsecaseGetStudent.Execute(ID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "bad request")
+	}
+
+	return c.JSON(http.StatusCreated, s.getStudentOut(student))
 }
 
 func (s *StudentController) getStudentOut(student *entity.Student) dto.StudentOutput {

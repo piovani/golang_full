@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	domain_entity "github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/infra/database"
 )
@@ -32,9 +30,14 @@ func (r *StudentRepository) All(s *[]domain_entity.Student) error {
 		return err
 	}
 
-	result := db.Find(s)
+	return db.Find(s).Error
+}
 
-	fmt.Println(result.RowsAffected)
+func (r *StudentRepository) Find(s *domain_entity.Student) error {
+	db, err := r.database.Open()
+	if err != nil {
+		return err
+	}
 
-	return result.Error
+	return db.Find(s).Error
 }
