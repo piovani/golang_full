@@ -21,7 +21,7 @@ func (r *StudentRepository) Save(s *domain_entity.Student) error {
 		return err
 	}
 
-	return db.Create(s).Error
+	return db.Save(s).Error
 }
 
 func (r *StudentRepository) All(s *[]domain_entity.Student) error {

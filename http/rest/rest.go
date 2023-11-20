@@ -37,6 +37,7 @@ func (r *Rest) getRoutes() {
 		usecase.NewCreateStudent(studentRepository),
 		usecase.NewGetStudents(studentRepository),
 		usecase.NewGetStudent(studentRepository),
+		usecase.NewUpdateStudent(studentRepository),
 	)
 
 	r.echo.Use(middleware.Recover())
@@ -47,6 +48,7 @@ func (r *Rest) getRoutes() {
 	r.echo.POST("/student", studentController.Create)
 	r.echo.GET("/student", studentController.GetStudents)
 	r.echo.GET("/student/:id", studentController.GetStudent)
+	r.echo.PUT("/student/:id", studentController.UpdateStudent)
 }
 
 func (r *Rest) start() error {

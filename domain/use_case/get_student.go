@@ -24,7 +24,6 @@ func (s *GetStudent) Execute(ID string) (*entity.Student, error) {
 	}
 
 	student.ID = UUID
-
 	if err = s.studentRepository.Find(&student); err != nil {
 		return &student, err
 	}

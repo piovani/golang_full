@@ -10,30 +10,33 @@ import (
 )
 
 type StudentController struct {
-	UseCaseCreate      usecase.CreateStudentContract
-	UsecaseGetStudents usecase.GetStudentsContract
-	UsecaseGetStudent  usecase.GetStudentContract
+	UseCaseCreate        usecase.CreateStudentContract
+	UsecaseGetStudents   usecase.GetStudentsContract
+	UsecaseGetStudent    usecase.GetStudentContract
+	UseCaseUpdateStudent usecase.UpdateStudentContract
 }
 
 func NewStudentController(
 	ucc usecase.CreateStudentContract,
 	ucgs usecase.GetStudentsContract,
 	ucg usecase.GetStudentContract,
+	ucus usecase.UpdateStudentContract,
 ) *StudentController {
 	return &StudentController{
-		UseCaseCreate:      ucc,
-		UsecaseGetStudents: ucgs,
-		UsecaseGetStudent:  ucg,
+		UseCaseCreate:        ucc,
+		UsecaseGetStudents:   ucgs,
+		UsecaseGetStudent:    ucg,
+		UseCaseUpdateStudent: ucus,
 	}
 }
 
 func (s *StudentController) Create(c echo.Context) error {
-	var studentDTO dto.StudentInput
-	if c.Bind(&studentDTO) != nil {
+	dto, err := s.getStudentInput(c)
+	if err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 
-	student, err := s.UseCaseCreate.Execute(studentDTO)
+	student, err := s.UseCaseCreate.Execute(dto)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "bad request")
 	}
@@ -47,7 +50,7 @@ func (s *StudentController) GetStudents(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "bad request")
 	}
 
-	return c.JSON(http.StatusCreated, s.getStudentsOut(students))
+	return c.JSON(http.StatusOK, s.getStudentsOut(students))
 }
 
 func (s *StudentController) GetStudent(c echo.Context) error {
@@ -57,14 +60,41 @@ func (s *StudentController) GetStudent(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "bad request")
 	}
 
-	return c.JSON(http.StatusCreated, s.getStudentOut(student))
+	return c.JSON(http.StatusOK, s.getStudentOut(student))
+}
+
+func (s *StudentController) UpdateStudent(c echo.Context) error {
+	dto, err := s.getStudentInput(c)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "bad request")
+	}
+
+	student, err := s.UseCaseUpdateStudent.Execute(dto)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "bad request")
+	}
+
+	return c.JSON(http.StatusOK, s.getStudentOut(student))
+}
+
+// AUX
+func (s *StudentController) getStudentInput(c echo.Context) (dto dto.StudentInput, err error) {
+	if err = c.Bind(&dto); err != nil {
+		return dto, err
+	}
+	dto.ID = c.Param("id")
+	return dto, err
 }
 
 func (s *StudentController) getStudentOut(student *entity.Student) dto.StudentOutput {
-	return dto.StudentOutput{
-		ID:   student.ID,
-		Name: student.Name,
-		Age:  student.Age,
+	if student == nil {
+		return dto.StudentOutput{}
+	} else {
+		return dto.StudentOutput{
+			ID:   student.ID,
+			Name: student.Name,
+			Age:  student.Age,
+		}
 	}
 }
 
