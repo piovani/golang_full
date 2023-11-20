@@ -34,4 +34,5 @@ type StudentRepository interface {
 	Save(student *Student) error
 	All(students *[]Student) error
 	Find(student *Student) error
+	Delete(student *Student) error
 }

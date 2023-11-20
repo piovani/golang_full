@@ -20,3 +20,7 @@ type GetStudentContract interface {
 type UpdateStudentContract interface {
 	Execute(dto dto.StudentInput) (*entity.Student, error)
 }
+
+type DeleteStudentContract interface {
+	Execute(id string) error
+}

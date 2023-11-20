@@ -41,3 +41,12 @@ func (r *StudentRepository) Find(s *domain_entity.Student) error {
 
 	return db.Find(s).Error
 }
+
+func (r *StudentRepository) Delete(s *domain_entity.Student) error {
+	db, err := r.database.Open()
+	if err != nil {
+		return err
+	}
+
+	return db.Delete(s).Error
+}

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,11 +10,16 @@ import (
 	"github.com/piovani/go_full/dto"
 )
 
+var (
+	ErrorBadRequest = fmt.Errorf("bad request")
+)
+
 type StudentController struct {
 	UseCaseCreate        usecase.CreateStudentContract
 	UsecaseGetStudents   usecase.GetStudentsContract
 	UsecaseGetStudent    usecase.GetStudentContract
 	UseCaseUpdateStudent usecase.UpdateStudentContract
+	UseCaseDeleteStudent usecase.DeleteStudentContract
 }
 
 func NewStudentController(
@@ -21,24 +27,26 @@ func NewStudentController(
 	ucgs usecase.GetStudentsContract,
 	ucg usecase.GetStudentContract,
 	ucus usecase.UpdateStudentContract,
+	ucsd usecase.DeleteStudentContract,
 ) *StudentController {
 	return &StudentController{
 		UseCaseCreate:        ucc,
 		UsecaseGetStudents:   ucgs,
 		UsecaseGetStudent:    ucg,
 		UseCaseUpdateStudent: ucus,
+		UseCaseDeleteStudent: ucsd,
 	}
 }
 
 func (s *StudentController) Create(c echo.Context) error {
 	dto, err := s.getStudentInput(c)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.JSON(http.StatusBadRequest, s.getMessageErrorOut(ErrorBadRequest))
 	}
 
 	student, err := s.UseCaseCreate.Execute(dto)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "bad request")
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
 	}
 
 	return c.JSON(http.StatusCreated, s.getStudentOut(student))
@@ -47,7 +55,7 @@ func (s *StudentController) Create(c echo.Context) error {
 func (s *StudentController) GetStudents(c echo.Context) error {
 	students, err := s.UsecaseGetStudents.Execute()
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "bad request")
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
 	}
 
 	return c.JSON(http.StatusOK, s.getStudentsOut(students))
@@ -57,24 +65,33 @@ func (s *StudentController) GetStudent(c echo.Context) error {
 	ID := c.Param("id")
 	student, err := s.UsecaseGetStudent.Execute(ID)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "bad request")
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
 	}
 
 	return c.JSON(http.StatusOK, s.getStudentOut(student))
 }
 
-func (s *StudentController) UpdateStudent(c echo.Context) error {
+func (s *StudentController) Update(c echo.Context) error {
 	dto, err := s.getStudentInput(c)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "bad request")
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(ErrorBadRequest))
 	}
 
 	student, err := s.UseCaseUpdateStudent.Execute(dto)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "bad request")
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
 	}
 
 	return c.JSON(http.StatusOK, s.getStudentOut(student))
+}
+
+func (s *StudentController) Delete(c echo.Context) error {
+	ID := c.Param("id")
+	if err := s.UseCaseDeleteStudent.Execute(ID); err != nil {
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "delete student successfully"})
 }
 
 // AUX
@@ -104,4 +121,10 @@ func (s *StudentController) getStudentsOut(students *[]entity.Student) (out []dt
 		out = append(out, s.getStudentOut(&newStudents[i]))
 	}
 	return out
+}
+
+func (s *StudentController) getMessageErrorOut(err error) dto.MessageErrorOut {
+	return dto.MessageErrorOut{
+		Message: err.Error(),
+	}
 }
