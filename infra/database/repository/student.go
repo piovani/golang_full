@@ -30,7 +30,7 @@ func (r *StudentRepository) All(s *[]domain_entity.Student) error {
 		return err
 	}
 
-	return db.Find(s).Error
+	return db.Where("deleted_at is NULL").Find(s).Error
 }
 
 func (r *StudentRepository) Find(s *domain_entity.Student) error {
@@ -39,14 +39,5 @@ func (r *StudentRepository) Find(s *domain_entity.Student) error {
 		return err
 	}
 
-	return db.Find(s).Error
-}
-
-func (r *StudentRepository) Delete(s *domain_entity.Student) error {
-	db, err := r.database.Open()
-	if err != nil {
-		return err
-	}
-
-	return db.Delete(s).Error
+	return db.Where("deleted_at is NULL").Find(s).Error
 }

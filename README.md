@@ -17,6 +17,10 @@ Demonstrate knowledge with Go
     [ ] - Authentication
     [ ] - Validation Request
 [ ] - API gRPC
+    [ ] - Create
+    [ ] - Read
+    [ ] - Update
+    [ ] - Delete
 [ ] - DB PostgreSQL
     [ ] - UUID with binary
     [ ] - Foreign key
@@ -29,7 +33,7 @@ Demonstrate knowledge with Go
     [X] - Read
     [X] - Update
     [X] - Delete
-    [ ] - Logical Deletion
+    [X] - Logical Deletion
 [ ] - Document
     [ ] - Swagger
     [ ] - Collection Postman
@@ -44,3 +48,4 @@ Demonstrate knowledge with Go
     [ ] - API Rest
     [ ] - API gRPC
     [ ] - Worker Consumer
+[ ] - Add Route GraphQL to query 

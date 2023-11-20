@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/piovani/go_full/domain/entity"
@@ -33,7 +34,9 @@ func (d *DeleteStudent) Execute(ID string) error {
 		return fmt.Errorf("student not found")
 	}
 
-	if d.studentRepository.Delete(&student); err != nil {
+	student.DeletedAt = time.Now()
+
+	if d.studentRepository.Save(&student); err != nil {
 		return err
 	}
 
