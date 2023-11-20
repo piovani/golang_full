@@ -27,8 +27,9 @@ Demonstrate knowledge with Go
 [ ] - CRUD
     [X] - Create
     [X] - Read
-    [ ] - Update
-    [ ] - Delete
+    [X] - Update
+    [X] - Delete
+    [ ] - Logical Deletion
 [ ] - Document
     [ ] - Swagger
     [ ] - Collection Postman
