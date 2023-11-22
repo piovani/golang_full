@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/dto"
@@ -30,6 +32,7 @@ func (u *UpdateStudent) Execute(dto dto.StudentInput) (*entity.Student, error) {
 
 	student.Name = dto.Name
 	student.Age = dto.Age
+	student.UpdatedAt = time.Now()
 
 	if err = u.studentRepository.Save(&student); err != nil {
 		return &student, err

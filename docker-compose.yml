@@ -17,3 +17,20 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - ${DB_PORT}:5432
+
+  go_full_s3:
+    container_name: go_full_s3
+    image: localstack/localstack:2.2.0
+    environment:
+      - SERVICES=s3
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_REGION}
+      - AWS_DEFAULT_OUTPUT=json
+      - AWS_BUCKET=${AWS_BUCKET}
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./docker/s3/bucket-policy.json:/opt/code/localstack/bucket-policy.json
+      - ./docker/s3/script.sh:/etc/localstack/init/ready.d/script.sh
