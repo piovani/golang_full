@@ -30,7 +30,7 @@ services:
       - AWS_DEFAULT_OUTPUT=json
       - AWS_BUCKET=${AWS_BUCKET}
     ports:
-      - "4566:4566"
+      - ${AWS_PORT}:4566
     volumes:
       - ./docker/s3/bucket-policy.json:/opt/code/localstack/bucket-policy.json
       - ./docker/s3/script.sh:/etc/localstack/init/ready.d/script.sh

@@ -7,7 +7,8 @@ import (
 
 type Config struct {
 	// API REST
-	ApiRestPort int32 `envconfig:"API_REST_PORT"`
+	StageAPP    string `json:"STAGE_APP"`
+	ApiRestPort int32  `envconfig:"API_REST_PORT"`
 
 	// DB
 	HostDB     string `envconfig:"DB_HOST"`
@@ -15,6 +16,13 @@ type Config struct {
 	UserDB     string `envconfig:"DB_USER"`
 	PasswordDB string `envconfig:"DB_PASSWORD"`
 	DatabaseDB string `envconfig:"DB_DATABASE"`
+
+	// AWS
+	AwsAccessKeyID     string `envconfig:"AWS_ACCESS_KEY_ID"`
+	AwsSecretAccessKey string `envconfig:"AWS_SECRET_ACCESS_KEY"`
+	AwsRegion          string `envconfig:"AWS_REGION"`
+	AwsBucket          string `envconfig:"AWS_BUCKET"`
+	AwsPort            string `envconfig:"AWS_PORT"`
 }
 
 var Env Config = Config{}
