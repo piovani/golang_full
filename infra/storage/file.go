@@ -28,7 +28,7 @@ func (f *File) Save() error {
 		return err
 	}
 
-	f.Kind = "pdf"
+	f.Kind = ".pdf"
 	f.Path = path
 	return nil
 }

@@ -4,11 +4,19 @@
 Demonstrate knowledge with Go
 
 ## Requirements
-- Docker version 24.0.6 or a compatible
-- Docker Compose 2.23.0 or a compatible
+- Docker 24.0.6 or a compatible version
+- Docker Compose 2.23.0 or a compatible version
 
 ## How to Start
-1. 
+1. in your terminal command execute:
+```
+make init
+```
+
+2. after execute:
+```
+make rest
+```
 
 ## Checklist
 [X] - Makefile

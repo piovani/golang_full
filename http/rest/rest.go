@@ -55,5 +55,5 @@ func (r *Rest) getRoutes() {
 }
 
 func (r *Rest) start() error {
-	return r.echo.Start(fmt.Sprintf(":%d", config.Env.ApiRestPort))
+	return r.echo.Start(fmt.Sprintf("localhost:%d", config.Env.ApiRestPort))
 }
