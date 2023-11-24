@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"io"
+	"log"
 	"strings"
 	"time"
 
@@ -22,24 +23,24 @@ func NewStorage() *Storage {
 	var sess *session.Session
 	var err error
 
-	if config.Env.StageAPP == "dev" {
-		sess, err = session.NewSession(&aws.Config{
-			Credentials:      credentials.NewStaticCredentials(config.Env.AwsAccessKeyID, config.Env.AwsSecretAccessKey, ""),
-			Region:           aws.String(config.Env.AwsRegion),
-			Endpoint:         aws.String(fmt.Sprintf("http://localhost:%s", config.Env.AwsPort)),
-			S3ForcePathStyle: aws.Bool(len(config.Env.AwsPort) > 0),
-		})
-	} else {
-		sess = session.Must(session.NewSessionWithOptions(session.Options{
-			SharedConfigState: session.SharedConfigEnable,
-			Config: aws.Config{
-				Region: aws.String(config.Env.AwsRegion),
-			},
-		}))
-	}
+	// if config.Env.StageAPP == "dev" {
+	sess, err = session.NewSession(&aws.Config{
+		Credentials:      credentials.NewStaticCredentials(config.Env.AwsAccessKeyID, config.Env.AwsSecretAccessKey, ""),
+		Region:           aws.String(config.Env.AwsRegion),
+		Endpoint:         aws.String(fmt.Sprintf("http://localhost:%s", config.Env.AwsPort)),
+		S3ForcePathStyle: aws.Bool(len(config.Env.AwsPort) > 0),
+	})
+	// } else {
+	// 	sess = session.Must(session.NewSessionWithOptions(session.Options{
+	// 		SharedConfigState: session.SharedConfigEnable,
+	// 		Config: aws.Config{
+	// 			Region: aws.String(config.Env.AwsRegion),
+	// 		},
+	// 	}))
+	// }
 
 	if err != nil {
-		fmt.Println("DEU RUIM")
+		log.Panic(err)
 	}
 
 	return &Storage{

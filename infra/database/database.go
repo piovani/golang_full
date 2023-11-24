@@ -5,6 +5,7 @@ import (
 
 	"github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/infra/config"
+	"github.com/piovani/go_full/infra/storage"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -43,6 +44,7 @@ func (d *Database) Migrate() error {
 
 	entities := []any{
 		entity.Student{},
+		storage.File{},
 	}
 
 	err = db.Migrator().DropTable(entities...)

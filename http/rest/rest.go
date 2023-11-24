@@ -30,11 +30,12 @@ func (r *Rest) Execute() error {
 func (r *Rest) getRoutes() {
 	// REPOSITORIES
 	studentRepository := repository.NewStudentRepository()
+	fileRepository := repository.NewFileRepository()
 
 	// CONTROLLERS
 	healthController := controller.NewHealthController()
 	studentController := controller.NewStudentController(
-		usecase.NewCreateStudent(studentRepository),
+		usecase.NewCreateStudent(studentRepository, fileRepository),
 		usecase.NewGetStudents(studentRepository),
 		usecase.NewGetStudent(studentRepository),
 		usecase.NewUpdateStudent(studentRepository),

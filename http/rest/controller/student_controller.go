@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/piovani/go_full/domain/entity"
@@ -100,6 +101,26 @@ func (s *StudentController) getStudentInput(c echo.Context) (dto dto.StudentInpu
 		return dto, err
 	}
 	dto.ID = c.Param("id")
+
+	if dto.Name == "" {
+		dto.Name = c.FormValue("name")
+		age := c.FormValue("age")
+		dto.Age, err = strconv.Atoi(age)
+		if err != nil {
+			return dto, err
+		}
+
+		file, err := c.FormFile("file")
+		if err != nil {
+			return dto, err
+		}
+
+		dto.File, err = file.Open()
+		if err != nil {
+			return dto, err
+		}
+	}
+
 	return dto, err
 }
 
