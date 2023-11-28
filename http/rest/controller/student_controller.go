@@ -9,6 +9,7 @@ import (
 	"github.com/piovani/go_full/domain/entity"
 	usecase "github.com/piovani/go_full/domain/use_case"
 	"github.com/piovani/go_full/dto"
+	"github.com/piovani/go_full/infra/storage"
 )
 
 var (
@@ -110,15 +111,17 @@ func (s *StudentController) getStudentInput(c echo.Context) (dto dto.StudentInpu
 			return dto, err
 		}
 
-		file, err := c.FormFile("file")
+		fileRequest, err := c.FormFile("file")
 		if err != nil {
 			return dto, err
 		}
 
-		dto.File, err = file.Open()
+		header, err := fileRequest.Open()
 		if err != nil {
 			return dto, err
 		}
+
+		dto.Document = *storage.NewFie(fileRequest.Filename, fileRequest.Header.Get("Content-Type"), header)
 	}
 
 	return dto, err

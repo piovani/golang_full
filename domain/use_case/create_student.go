@@ -23,16 +23,15 @@ func (c *CreateStudent) Execute(dto dto.StudentInput) (student *entity.Student, 
 		return student, err
 	}
 
-	file := storage.NewFie(dto.File)
-	if err = file.Save(); err != nil {
+	if err = dto.Document.Upload(); err != nil {
 		return student, err
 	}
 
-	if err = c.fileRepository.Save(file); err != nil {
+	if err = c.fileRepository.Save(&dto.Document); err != nil {
 		return student, err
 	}
 
-	student = entity.NewStudent(dto.Name, dto.Age, file.ID)
+	student = entity.NewStudent(dto.Name, dto.Age, dto.Document.ID)
 	if err = c.studentRepository.Save(student); err != nil {
 		return student, err
 	}

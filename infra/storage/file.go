@@ -7,36 +7,29 @@ import (
 )
 
 type File struct {
-	ID      uuid.UUID `gorm:"column:id;primaryKey"`
-	Kind    string    `gorm:"column:kind;size:255"`
-	Path    string    `gorm:"column:path;size:255"`
-	storage StorageContract
-	file    io.Reader
+	ID     uuid.UUID `gorm:"column:id;primaryKey"`
+	Name   string    `gorm:"column:name;size:255"`
+	Kind   string    `gorm:"column:kind;size:255"`
+	Path   string    `gorm:"column:path;size:255"`
+	reader io.Reader
 }
 
-func NewFie(f io.Reader) *File {
+func NewFie(name, kind string, reader io.Reader) *File {
 	return &File{
-		ID:      uuid.New(),
-		file:    f,
-		storage: NewStorage(),
+		ID:     uuid.New(),
+		Name:   name,
+		Kind:   kind,
+		reader: reader,
 	}
 }
 
-func (f *File) Save() error {
-	path, err := f.storage.Upload(f.file)
+func (f *File) Upload() error {
+	path, err := NewStorage().Upload(f.reader)
 	if err != nil {
 		return err
 	}
 
-	f.Kind = ".pdf"
 	f.Path = path
+
 	return nil
 }
-
-// func (f *File) SetPath(path string) {
-// 	f.path = path
-// }
-
-// func (f *File) GetPath() string {
-// 	return f.path
-// }

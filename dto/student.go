@@ -1,16 +1,15 @@
 package dto
 
 import (
-	"io"
-
 	"github.com/google/uuid"
+	"github.com/piovani/go_full/infra/storage"
 )
 
 type StudentInput struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-	File io.Reader
+	ID       string `json:"id,omitempty"`
+	Name     string `json:"name"`
+	Age      int    `json:"age"`
+	Document storage.File
 }
 
 type StudentOutput struct {
