@@ -17,3 +17,10 @@ type StudentOutput struct {
 	Name string    `json:"name"`
 	Age  int       `json:"age"`
 }
+
+type StudentDocumentOutput struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Type string    `json:"type"`
+	URL  string    `json:"url"`
+}

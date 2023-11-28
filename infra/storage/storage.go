@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -49,19 +48,20 @@ func NewStorage() *Storage {
 }
 
 func (s *Storage) Donwload(path string) (io.Reader, error) {
-	pPath := strings.Split(path, "/")
-
 	dwParams := &s3.GetObjectInput{
 		Bucket: aws.String(config.Env.AwsBucket),
-		Key:    aws.String(pPath[3]),
+		Key:    aws.String(path),
 	}
 
-	res, err := s3.New(s.sess).GetObject(dwParams)
+	resp, err := s3.New(s.sess).GetObject(dwParams)
 	if err != nil {
 		return nil, err
 	}
 
-	return res.Body, nil
+	body := resp.Body
+	defer body.Close()
+
+	return body, nil
 }
 
 func (s *Storage) Upload(file io.Reader) (string, error) {

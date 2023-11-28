@@ -17,11 +17,12 @@ var (
 )
 
 type StudentController struct {
-	UseCaseCreate        usecase.CreateStudentContract
-	UsecaseGetStudents   usecase.GetStudentsContract
-	UsecaseGetStudent    usecase.GetStudentContract
-	UseCaseUpdateStudent usecase.UpdateStudentContract
-	UseCaseDeleteStudent usecase.DeleteStudentContract
+	UseCaseCreate             usecase.CreateStudentContract
+	UsecaseGetStudents        usecase.GetStudentsContract
+	UsecaseGetStudent         usecase.GetStudentContract
+	UseCaseUpdateStudent      usecase.UpdateStudentContract
+	UseCaseDeleteStudent      usecase.DeleteStudentContract
+	UseCaseGetDocumentStudent usecase.GetDocumentContract
 }
 
 func NewStudentController(
@@ -30,13 +31,15 @@ func NewStudentController(
 	ucg usecase.GetStudentContract,
 	ucus usecase.UpdateStudentContract,
 	ucsd usecase.DeleteStudentContract,
+	ucgd usecase.GetDocumentContract,
 ) *StudentController {
 	return &StudentController{
-		UseCaseCreate:        ucc,
-		UsecaseGetStudents:   ucgs,
-		UsecaseGetStudent:    ucg,
-		UseCaseUpdateStudent: ucus,
-		UseCaseDeleteStudent: ucsd,
+		UseCaseCreate:             ucc,
+		UsecaseGetStudents:        ucgs,
+		UsecaseGetStudent:         ucg,
+		UseCaseUpdateStudent:      ucus,
+		UseCaseDeleteStudent:      ucsd,
+		UseCaseGetDocumentStudent: ucgd,
 	}
 }
 
@@ -96,6 +99,17 @@ func (s *StudentController) Delete(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{"message": "delete student successfully"})
 }
 
+func (s *StudentController) GetDocumentStudent(c echo.Context) error {
+	ID := c.Param("id")
+
+	document, err := s.UseCaseGetDocumentStudent.Execute(ID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, s.getMessageErrorOut(err))
+	}
+
+	return c.JSON(http.StatusOK, s.getStudentDocumentOut(&document))
+}
+
 // AUX
 func (s *StudentController) getStudentInput(c echo.Context) (dto dto.StudentInput, err error) {
 	if err = c.Bind(&dto); err != nil {
@@ -120,6 +134,7 @@ func (s *StudentController) getStudentInput(c echo.Context) (dto dto.StudentInpu
 		if err != nil {
 			return dto, err
 		}
+		defer header.Close()
 
 		dto.Document = *storage.NewFie(fileRequest.Filename, fileRequest.Header.Get("Content-Type"), header)
 	}
@@ -145,6 +160,19 @@ func (s *StudentController) getStudentsOut(students *[]entity.Student) (out []dt
 		out = append(out, s.getStudentOut(&newStudents[i]))
 	}
 	return out
+}
+
+func (s *StudentController) getStudentDocumentOut(document *storage.File) dto.StudentDocumentOutput {
+	if document == nil {
+		return dto.StudentDocumentOutput{}
+	} else {
+		return dto.StudentDocumentOutput{
+			ID:   document.ID,
+			Name: document.Name,
+			Type: document.Kind,
+			URL:  document.Path,
+		}
+	}
 }
 
 func (s *StudentController) getMessageErrorOut(err error) dto.MessageErrorOut {

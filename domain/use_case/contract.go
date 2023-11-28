@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/piovani/go_full/domain/entity"
 	"github.com/piovani/go_full/dto"
+	"github.com/piovani/go_full/infra/storage"
 )
 
 type CreateStudentContract interface {
@@ -14,7 +15,7 @@ type GetStudentsContract interface {
 }
 
 type GetStudentContract interface {
-	Execute(id string) (*entity.Student, error)
+	Execute(ID string) (*entity.Student, error)
 }
 
 type UpdateStudentContract interface {
@@ -22,5 +23,9 @@ type UpdateStudentContract interface {
 }
 
 type DeleteStudentContract interface {
-	Execute(id string) error
+	Execute(ID string) error
+}
+
+type GetDocumentContract interface {
+	Execute(ID string) (storage.File, error)
 }

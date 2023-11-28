@@ -2,6 +2,7 @@ package storage
 
 import (
 	"io"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -28,8 +29,11 @@ func (f *File) Upload() error {
 	if err != nil {
 		return err
 	}
-
 	f.Path = path
-
 	return nil
+}
+
+func (f *File) Download() (io.Reader, error) {
+	pathSplit := strings.Split(f.Path, "/")
+	return NewStorage().Donwload(pathSplit[4])
 }

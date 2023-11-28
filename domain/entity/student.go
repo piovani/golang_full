@@ -6,10 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	Students = []*Student{}
-)
-
 type Student struct {
 	ID         uuid.UUID `gorm:"column:id;primaryKey"`
 	Name       string    `gorm:"column:name;size:255"`
