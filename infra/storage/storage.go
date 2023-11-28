@@ -22,21 +22,21 @@ func NewStorage() *Storage {
 	var sess *session.Session
 	var err error
 
-	// if config.Env.StageAPP == "dev" {
-	sess, err = session.NewSession(&aws.Config{
-		Credentials:      credentials.NewStaticCredentials(config.Env.AwsAccessKeyID, config.Env.AwsSecretAccessKey, ""),
-		Region:           aws.String(config.Env.AwsRegion),
-		Endpoint:         aws.String(fmt.Sprintf("http://localhost:%s", config.Env.AwsPort)),
-		S3ForcePathStyle: aws.Bool(len(config.Env.AwsPort) > 0),
-	})
-	// } else {
-	// 	sess = session.Must(session.NewSessionWithOptions(session.Options{
-	// 		SharedConfigState: session.SharedConfigEnable,
-	// 		Config: aws.Config{
-	// 			Region: aws.String(config.Env.AwsRegion),
-	// 		},
-	// 	}))
-	// }
+	if config.Env.StageAPP == "dev" {
+		sess, err = session.NewSession(&aws.Config{
+			Credentials:      credentials.NewStaticCredentials(config.Env.AwsAccessKeyID, config.Env.AwsSecretAccessKey, ""),
+			Region:           aws.String(config.Env.AwsRegion),
+			Endpoint:         aws.String(fmt.Sprintf("http://localhost:%s", config.Env.AwsPort)),
+			S3ForcePathStyle: aws.Bool(len(config.Env.AwsPort) > 0),
+		})
+	} else {
+		sess = session.Must(session.NewSessionWithOptions(session.Options{
+			SharedConfigState: session.SharedConfigEnable,
+			Config: aws.Config{
+				Region: aws.String(config.Env.AwsRegion),
+			},
+		}))
+	}
 
 	if err != nil {
 		log.Panic(err)
@@ -64,16 +64,20 @@ func (s *Storage) Donwload(path string) (io.Reader, error) {
 	return body, nil
 }
 
-func (s *Storage) Upload(file io.Reader) (string, error) {
+func (s *Storage) Upload(file *File) error {
 	upParams := &s3manager.UploadInput{
 		Bucket: aws.String(config.Env.AwsBucket),
 		Key:    aws.String(s.getKey()),
-		Body:   file,
+		Body:   file.Reader,
 	}
 
 	result, err := s3manager.NewUploader(s.sess).Upload(upParams)
-
-	return result.Location, err
+	if err != nil {
+		return err
+	} else {
+		file.Path = result.Location
+		return nil
+	}
 }
 
 func (s *Storage) getKey() string {

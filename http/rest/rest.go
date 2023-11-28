@@ -9,6 +9,7 @@ import (
 	"github.com/piovani/go_full/http/rest/controller"
 	"github.com/piovani/go_full/infra/config"
 	"github.com/piovani/go_full/infra/database/repository"
+	"github.com/piovani/go_full/infra/storage"
 )
 
 type Rest struct {
@@ -28,6 +29,9 @@ func (r *Rest) Execute() error {
 }
 
 func (r *Rest) getRoutes() {
+	// INFRA
+	storage := storage.NewStorage()
+
 	// REPOSITORIES
 	studentRepository := repository.NewStudentRepository()
 	fileRepository := repository.NewFileRepository()
@@ -35,7 +39,7 @@ func (r *Rest) getRoutes() {
 	// CONTROLLERS
 	healthController := controller.NewHealthController()
 	studentController := controller.NewStudentController(
-		usecase.NewCreateStudent(studentRepository, fileRepository),
+		usecase.NewCreateStudent(storage, studentRepository, fileRepository),
 		usecase.NewGetStudents(studentRepository),
 		usecase.NewGetStudent(studentRepository),
 		usecase.NewUpdateStudent(studentRepository),

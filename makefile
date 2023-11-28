@@ -1,4 +1,6 @@
-#!/bin/bash
+GOPATH = $(shell go env GOPATH)
+# GOPACKAGES = $(shell go list ./... | grep -v /vendor/)
+
 help:
 	@echo "Go Full"
 	@echo "https://github.com/piovani/go_full"
@@ -31,3 +33,12 @@ rest:
 
 all-files:
 	docker exec go_full_s3 awslocal s3api list-objects --bucket=my-bucket
+
+mock:
+	${GOPATH}/bin/mockgen -source=./infra/storage/contract.go -destination=./infra/test/mock/infra/storage.go -package=mock
+	${GOPATH}/bin/mockgen -source=./domain/entity/student.go -destination=./infra/test/mock/repositories/student.go -package=mock
+	${GOPATH}/bin/mockgen -source=./infra/storage/repository.go -destination=./infra/test/mock/repositories/file.go -package=mock
+
+cover:
+	go test ./... -coverprofile=covarage.out -covermode=count
+	go tool cover -func=covarage.out

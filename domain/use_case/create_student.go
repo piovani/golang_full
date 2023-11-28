@@ -7,24 +7,26 @@ import (
 )
 
 type CreateStudent struct {
+	storage           storage.StorageContract
 	studentRepository entity.StudentRepository
 	fileRepository    storage.FileRepository
 }
 
-func NewCreateStudent(sr entity.StudentRepository, fr storage.FileRepository) *CreateStudent {
+func NewCreateStudent(
+	s storage.StorageContract,
+	sr entity.StudentRepository,
+	fr storage.FileRepository,
+) *CreateStudent {
 	return &CreateStudent{
+		storage:           s,
 		studentRepository: sr,
 		fileRepository:    fr,
 	}
 }
 
 func (c *CreateStudent) Execute(dto dto.StudentInput) (student *entity.Student, err error) {
-	if err = c.rules(dto); err != nil {
-		return student, err
-	}
-
-	if err = dto.Document.Upload(); err != nil {
-		return student, err
+	if err = c.storage.Upload(&dto.Document); err != nil {
+		return nil, err
 	}
 
 	if err = c.fileRepository.Save(&dto.Document); err != nil {
@@ -37,8 +39,4 @@ func (c *CreateStudent) Execute(dto dto.StudentInput) (student *entity.Student, 
 	}
 
 	return student, nil
-}
-
-func (c *CreateStudent) rules(dto.StudentInput) error {
-	return nil
 }
